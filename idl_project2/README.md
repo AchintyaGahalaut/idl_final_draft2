@@ -223,3 +223,11 @@ idl_project2/
 - **Dataset**: Saxena, A., Goebel, K., Simon, D., & Eklund, N. (2008). *Damage propagation modeling for aircraft engine run-to-failure simulation.* NASA Ames Research Center.
 - **DCNN Architecture**: Li, X., Ding, Q., & Sun, J. Q. (2018). *Remaining useful life estimation in prognostics using deep convolutional neural networks.* Reliability Engineering & System Safety.
 - **Evaluation Protocol**: Babu, G. S., Zhao, P., & Li, X. L. (2016). *Deep convolutional neural network based regression approach for estimation of remaining useful life.*
+
+---
+
+## 💡 Note on Initial Contributions
+
+The preliminary work, experiments, and initial code for contributions 1 and 2 of this project are preserved in the following notebook for review:
+- `contribution_one_and_two/dev_contri_1_2_final.ipynb`
+

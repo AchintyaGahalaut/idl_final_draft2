@@ -103,7 +103,7 @@ Finally, the code saves the model's "knowledge" into a file (e.g., `dcnn_model_F
 
 
 ### `evaluate.py`
-The `evaluate.py` cell is the "Report Card" for your model. It takes the results from the training phase and creates a visual graph to show you exactly where the model is accurate and where it is making mistakes.
+The `evaluate.py` cell is the "Report Card" for your model. It takes the saved results from the training phase and creates a visual graph to show you exactly where the model is accurate and where it is making mistakes. Crucially, it is standalone: it loads the `.pth` files from disk, meaning you can run it without running the long training process first.
 
 Here is the step-by-step breakdown:
 
@@ -121,14 +121,14 @@ If the code just plotted the results randomly, the graph would look like a mess 
 
 ### 4. Creating the Visualization
 The code uses a library called `matplotlib` to draw a chart for each dataset (FD001, FD002, etc.):
-*   **The Blue Line (Actual RUL):** This represents the "Ground Truth." It shows the real number of cycles left for each engine. Because we sorted it, it looks like a smooth line dropping from 125 down to zero.
-*   **The Red Dots (Predicted RUL):** These are the model's guesses. Each dot corresponds to an engine. 
+*   **The Blue Line/Dots (Actual RUL):** This represents the "Ground Truth." It shows the real number of cycles left for each engine. Because we sorted it, it looks like a smooth line dropping from 125 down to zero.
+*   **The Red Line/Stars (Predicted RUL):** These are the model's guesses. Each star corresponds to an engine. 
 
 ### 5. Interpreting the Results
 By looking at this graph, you can quickly diagnose your model's health:
-*   **Dots on the line:** The model is perfectly accurate.
-*   **Dots above the line:** The model is being "too optimistic" (dangerous, as it thinks the engine will last longer than it will).
-*   **Dots below the line:** The model is being "too cautious" (better for safety, but may lead to unnecessary maintenance).
+*   **Stars on the line:** The model is perfectly accurate.
+*   **Stars above the line:** The model is being "too optimistic" (dangerous, as it thinks the engine will last longer than it will).
+*   **Stars below the line:** The model is being "too cautious" (better for safety, but may lead to unnecessary maintenance).
 
 ### 6. Final Summary
-The code concludes by printing out the final **RMSE** (average error in cycles) and the **C-MAPSS Score** one last time for each dataset, giving you the final numbers you need for your project report.
+The code concludes by embedding the dataset ID and final **RMSE** (average error in cycles) directly into the title of each plot, and printing out the **C-MAPSS Score** one last time for each dataset, giving you the final numbers you need for your project report.

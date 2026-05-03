@@ -22,13 +22,13 @@ This document tracks all the modifications and fixes applied to the `final_dcnn_
 * **Change:** Refactored data generation helpers (`generate_sequences`, `generate_labels`).
 * **Fix:** Ensured these functions are completely stateless so they can be reused iteratively inside the dataset loop without causing memory leaks or cross-contamination between FD001-FD004 dataframes.
 
-## 5. Evaluation Workflow and Model Return
-* **Change:** Fixed the `train_model` function to return the trained model object.
-* **Fix:** Resolved a critical `AttributeError: 'NoneType' object has no attribute 'eval'` in the evaluation cell. The training loop now correctly passes the trained model back to the global `trained_models` dictionary, allowing the test evaluation and plotting functions to run smoothly.
+## 5. Evaluation Workflow Independence
+* **Change:** Refactored the evaluation cell to load `.pth` files directly from disk instead of relying on in-memory objects.
+* **Fix:** Eliminated the dependency on the `trained_models` dictionary. The evaluation stage now independently instantiates the `PaperDeepCNN` architecture and loads the saved weights, meaning you can evaluate the models without running the 250-epoch training cell first.
 
 ## 6. Persistent Model Saving
-* **Change:** Added `torch.save(trained_model.state_dict(), ...)` at the end of the `train.py` execution block.
-* **Fix:** Previously, the DCNN notebook only trained models in-memory, requiring a full 250-epoch retraining if the kernel restarted. It now automatically writes `dcnn_model_FD00X.pth` checkpoints directly to the `gem` folder for immediate inference.
+* **Change:** Added `torch.save(model.state_dict(), ...)` at the end of the `train.py` execution block.
+* **Fix:** Previously, the DCNN notebook only trained models in-memory, requiring a full 250-epoch retraining if the kernel restarted. It now automatically writes `dcnn_model_FD00X.pth` checkpoints directly to the current directory for immediate inference.
 
 ## 7. Cleaned Redundant Code
 * **Change:** Removed isolated `example usage` code blocks.

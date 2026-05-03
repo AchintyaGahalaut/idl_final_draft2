@@ -1,0 +1,39 @@
+Abstract
+
+In this project, we address the challenge of predicting the Remaining Useful Life (RUL) of turbofan engines using the NASA C-MAPSS datasets. We perform a comparative analysis between a two-layer unidirectional LSTM baseline and a five-layer 2D Deep Convolutional Neural Network (DCNN) variant. Both models were evaluated under a standardized "last-window-only" protocol to ensure a fair performance assessment across all four dataset sub-conditions. Our findings indicate that while the DCNN slightly outperforms the LSTM on single-condition datasets, the LSTM baseline demonstrates superior generalization on complex multi-condition environments and achieves a better overall average RMSE (17.79 vs. 18.32) while requiring significantly fewer training resources.
+
+1 Introduction
+
+The reliable operation of turbofan engines is a critical concern in aerospace engineering, where unexpected component failure can lead to catastrophic consequences and significant economic losses. Consequently, the field of Prognostics and Health Management (PHM) has shifted its focus from reactive and scheduled maintenance toward predictive strategies. Central to this shift is the task of Remaining Useful Life (RUL) estimation—predicting the number of operational cycles an engine has left before it reaches a failure threshold. By leveraging time-series sensor data, such as those provided by the NASA Commercial Modular Aero-Propulsion System Simulation (C-MAPSS) datasets, engineers can model complex degradation patterns across various operating conditions and fault modes.
+
+The motivation for accurate RUL prediction stems from the need to optimize maintenance schedules and enhance operational safety. Traditional physics-based models often struggle to account for the intricate, non-linear interactions within a deteriorating engine. In contrast, deep learning architectures like Long Short-Term Memory (LSTM) networks and Deep Convolutional Neural Networks (DCNN) offer a data-driven approach capable of extracting latent features from high-dimensional sensor streams. LSTMs are particularly suited for capturing long-term temporal dependencies, while DCNNs excel at identifying local patterns across different sensor channels.
+
+Successful RUL modeling enables several new capabilities in industrial maintenance. It allows for just-in-time servicing, which minimizes unscheduled downtime and prevents the premature replacement of healthy components. Furthermore, it provides operators with an actionable early-warning system, improving overall fleet reliability. In this project, we perform a comparison between an LSTM baseline and a DCNN variant to determine the strengths of each model in handling both single-condition and complex multi-condition degradation scenarios within the C-MAPSS benchmark.
+
+2 Baseline Model
+
+For this project, we selected a Long Short-Term Memory (LSTM) network as our baseline model. The LSTM is an architecture within the family of Recurrent Neural Networks (RNNs) that was covered during the course for sequence modeling tasks. It utilizes gates consisting of input, forget, and output gates alongside a cell state to selectively retain or discard information, effectively overcoming the vanishing gradient problem over long sequences.
+
+The choice of an LSTM is appropriate for the C-MAPSS dataset because the data is a multivariate time-series from sensor readings. The model assumes that the data possesses significant temporal dependencies, where the current state of engine degradation is a function of its previous operational patterns. In the context of RUL prediction, the LSTM is a natural fit as it can capture the non-linear, long-term trends in sensor readings (such as temperatures, pressures, and fan speeds) that signal the gradual progression toward failure. By processing these sequences, the LSTM learns to map temporal features to a single continuous RUL value. Our implementation stacks two LSTM layers with a hidden size of 128, followed by a dropout layer (rate 0.2) for regularization, and a final fully-connected layer that outputs a single scalar: the predicted RUL. The model takes as input a sliding window of 30 consecutive cycles, each with 14 selected sensor measurements, and is trained using mean squared error loss with the Adam optimizer.
+
+The LSTM assumes that the data is sequential and that the current degradation state of an engine depends on its history of sensor readings, not just the most recent cycle. It also assumes that degradation follows a consistent enough pattern across engines that trends learned from training engines will generalize to unseen test engines. We further apply a piecewise linear RUL labeling scheme with a cap of 125 cycles, which encodes the assumption that engines in early life are equally healthy regardless of how many cycles they have logged.
+
+3 Model Variant
+
+For our model variant, we implemented the Deep Convolutional Neural Network (DCNN) architecture proposed by Babu et al. in their paper, "Remaining useful life estimation in prognostics using deep convolution neural networks" (2016). This model represents a shift from purely recurrent architectures toward leveraging the feature extraction capabilities of convolutional layers for time-series prognostics.
+
+3.1 Architecture Details
+The DCNN architecture is specifically designed to extract high-level representations from multivariate sensor data without manual feature engineering. The network consists of five convolutional layers followed by a regression tail:
+- **Feature Extraction Layers:** Four identical sequential convolutional layers, each containing 10 filters of size 10x1. Zero-padding is applied to preserve the temporal dimension across each sensor's time sequence.
+- **Combination Layer:** A fifth convolutional layer with a single 3x1 filter merges the previous feature maps into a unified high-level representation.
+- **Absence of Pooling:** Notably, the architecture omits pooling layers. The authors argue that in prognostic tasks where raw feature dimensions are already relatively low, pooling would discard fine-grained degradation information critical for accurate RUL estimation.
+- **Regression Tail:** The feature maps are flattened and passed through a dropout layer (rate 0.5) for regularization, followed by a fully-connected layer of 100 neurons and a final output neuron for RUL prediction.
+- **Optimization:** All layers use `tanh` activation functions and Xavier normal initialization. Training is conducted for 250 epochs using the Adam optimizer with a dynamic learning rate schedule (0.001 dropping to 0.0001 after 200 epochs).
+
+3.2 Similarities and Differences
+Both the LSTM baseline and the DCNN variant utilize a sliding window approach and a piecewise linear RUL target (capped at 125 cycles). However, they differ fundamentally in their inductive bias. While the LSTM relies on recurrent loops and gating mechanisms to maintain a temporal "memory" of engine health, the DCNN uses 1D temporal convolutions to extract local patterns across the time dimension for each sensor. Additionally, the DCNN utilizes a wider normalization range ([-1, 1] vs. [0, 1]) and a deeper stack of layers, requiring 250 epochs to converge compared to the 50 epochs needed for the LSTM.
+
+3.3 Motivation for Choice
+The DCNN is a compelling choice for the C-MAPSS dataset because it excels at identifying subtle local fluctuations in sensor streams that correlate with engine wear. By stacking multiple convolutional layers, the model can learn abstract feature hierarchies—moving from raw sensor patterns in early layers to complex degradation signatures in deeper layers—offering a high-efficiency alternative to the computational burden of processing long sequences with recurrent units.
+
+

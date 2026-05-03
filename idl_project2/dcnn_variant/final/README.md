@@ -36,8 +36,9 @@ The training phase is the "practice session" where the model learns from histori
 ## 4. Evaluation and Visualization (`evaluate.py` logic)
 The final stage provides the "Report Card" for the model's performance:
 
+*   **Standalone Execution:** The evaluation cell now loads saved `.pth` model weights directly from disk, allowing for immediate inference without retraining.
 *   **Sorted Visualization:** Plots Actual RUL vs. Predicted RUL. The data is sorted by RUL to create a "descending staircase" visual, making it easy to see where the model deviates from the truth.
 *   **Visual Diagnosis:**
-    *   **Blue Line:** Ground truth (Actual RUL).
-    *   **Red Dots:** Model predictions.
-*   **Performance Metrics:** Re-calculates and displays final RMSE and Scores for each of the four NASA datasets (FD001 - FD004).
+    *   **Blue Dots/Line:** Ground truth (Actual RUL).
+    *   **Red Stars/Line:** Model predictions.
+*   **Performance Metrics:** Re-calculates and displays final RMSE and Scores for each of the four NASA datasets (FD001 - FD004), embedding the dataset ID and RMSE directly into each plot's title.

@@ -1,7 +1,0 @@
-I have chosen to work on project option 6: NASA C-MAPSS Turbofan Engine Degradation. 
-I'm still new to working with deep learning, so make sure to explain things in simple term. 
-Don't assume I have knowledge of the required concepts.
-
-
-Always work in the following env: conda activate idl.
- 

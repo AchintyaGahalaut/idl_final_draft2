@@ -1,0 +1,15 @@
+# Ignore temporary scratch scripts
+scratch/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Data and Models (Optional: ignore if you don't want large files in Git)
+*.csv
+*.pth
+
+# OS specific files
+.DS_Store
+Thumbs.db
